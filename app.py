@@ -1,8 +1,12 @@
+
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 import my_repository
 
 app = Flask(__name__)
+CORS(app)
+
 my_mongo_agent = my_repository.MyMongoAgent()
 
 @app.route('/')

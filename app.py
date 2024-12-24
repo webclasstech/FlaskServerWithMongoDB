@@ -16,6 +16,14 @@ def get_all_dogs():
     except Exception as e:
         return jsonify({"message":"Error occurred" ,"err":str(e)}), 500
 
+@app.route('/dogs/<id>', methods=['GET'])
+def get_dog_by_id(id):
+    try:
+        response = my_mongo_agent.get_dog_by_id(id)
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"message":"Error occurred" ,"err":str(e)}), 500
+
 @app.route('/dogs',methods=["POST"])
 def insert_new_dog():
     # TODO: add input validations - on bad input return error with code 400

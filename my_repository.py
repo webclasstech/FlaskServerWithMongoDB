@@ -35,14 +35,17 @@ class MyMongoAgent:
 
 
     def get_dog_by_id(self,id_str):
-        results = self.dogs_collection.find({"_id": ObjectId(id_str)})
-        # print(results)  # this will print cursor, not useful for us
-        #print(utils.serialize_objectid(results))
-        list_of_dogs = []
-        for current in results:
-            list_of_dogs.append(utils.serialize_objectid(current))
-        #print(list_of_dogs)
-        return list_of_dogs
+        try:
+            results = self.dogs_collection.find({"_id": ObjectId(id_str)})
+            # print(results)  # this will print cursor, not useful for us
+            #print(utils.serialize_objectid(results))
+            list_of_dogs = []
+            for current in results:
+                list_of_dogs.append(utils.serialize_objectid(current))
+            #print(list_of_dogs)
+            return list_of_dogs
+        except Exception as e:
+            raise
 
     def insert_dog(self,new_dog_dict):
         #new_dog = {"name":"Flaffi","birthYear":2024, "breed":"Golden"}

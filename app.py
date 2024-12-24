@@ -18,13 +18,30 @@ def get_all_dogs():
 
 @app.route('/dogs',methods=["POST"])
 def insert_new_dog():
-    # TODO: add input validations
+    # TODO: add input validations - on bad input return error with code 400
     try:
         # get the data from the request body
         # and send to our 'repository'
-        x = my_mongo_agent.insert_dog(request.json)
+        response = my_mongo_agent.insert_dog(request.json)
 
-        return jsonify(x), 200
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"message":"Error occurred" ,"err":str(e)}), 500
+
+@app.route('/dogs/<id>', methods=['DELETE'])
+def delete_dog(id):
+    try:
+        response = my_mongo_agent.delete_dog_by_id(id)
+        return jsonify(response), 200
+    except Exception as e:
+        return jsonify({"message":"Error occurred" ,"err":str(e)}), 500
+
+@app.route('/dogs/<id>', methods=['PUT'])
+def update_record(id):
+    # TODO: add input validations - on bad input return error with code 400
+    try:
+        response = my_mongo_agent.update_dog_by_id(id, request.json)
+        return jsonify(response), 200
     except Exception as e:
         return jsonify({"message":"Error occurred" ,"err":str(e)}), 500
 

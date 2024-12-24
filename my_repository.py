@@ -12,9 +12,9 @@ class MyMongoAgent:
         load_dotenv()
         # print(f'mongo bd conn string: {os.getenv('MONGODB_CONNECT_STR')}')
         self.client = MongoClient(os.getenv('MONGODB_CONNECT_STR'), tlsCAFile=certifi.where())
-        self.Database = self.client["wd9"]
-        print(self.Database.name)
-        self.dogs_collection = self.Database.Dogs
+        self.Database = self.client[os.getenv('DB_NAME')]
+        #print(self.Database.name)
+        self.dogs_collection = self.Database[os.getenv('COLLECTION_NAME')]
 
 
     def get_all_dogs(self):
@@ -56,17 +56,26 @@ class MyMongoAgent:
     #     print(response)
 
     def update_dog_by_id(self, id_str, updated_dog_dic):
-        # updated_dog = {"birthYear": 2023, "breed": "Poodle 2"}
-        # response = self.dogs_collection.update_one({"_id":ObjectId("676a85f023653a344c7af55a")},{"$set" :updated_dog})
-        response = self.dogs_collection.update_one({"_id": ObjectId(id_str)}, {"$set": updated_dog_dic})
-        #print(response)
-        return response
+        try:
+            # updated_dog = {"birthYear": 2023, "breed": "Poodle 2"}
+            # response = self.dogs_collection.update_one({"_id":ObjectId("676a85f023653a344c7af55a")},{"$set" :updated_dog})
+            response = self.dogs_collection.update_one({"_id": ObjectId(id_str)}, {"$set": updated_dog_dic})
+            print(type(response), response)
+            return {
+                "how_many_modified": response.modified_count,
+                "status": response.acknowledged
+            }
+        except Exception as e:
+            raise
 
     def delete_dog_by_id(self,id_str):
         response = self.dogs_collection.delete_one({"_id": ObjectId(id_str)})
         # print(response)
-        return response
-
+        # print(type(response), response)
+        return {
+            "how_many_deleted": response.deleted_count,
+            "status": response.acknowledged
+        }
     # def delete_dog(self):
     #     response = self.dogs_collection.delete_one({"name":"Flaffi","birthYear":2023})
     #     print(response)

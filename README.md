@@ -8,7 +8,7 @@ to install proj libraries:
     
     pip install "pymongo[srv]"
     pip install certifi 
-    pip install bson 
+
     pip install python-dotenv
     pip install flask 
     pip install flask_cors
